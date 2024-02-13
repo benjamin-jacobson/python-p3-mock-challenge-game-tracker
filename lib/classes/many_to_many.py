@@ -2,6 +2,17 @@ class Game:
     def __init__(self, title):
         self.title = title
 
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self,title):
+        if isinstance(title,str) and len(title) > 0:
+            self._title = title
+        else:
+            raise Exception("Title property must be of istance string, and more than 0 characters ")
+
     def results(self):
         pass
 
