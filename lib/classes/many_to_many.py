@@ -19,13 +19,23 @@ class Game:
         #     raise Exception("Title property must be of istance string, and more than 0 characters ")
 
     def results(self):
-        pass
+        '''Returns a list of all results for that game. Results must be of type Result'''
+        # return [r for r in Result.all_results if r.game is self]
+        return [result for result in Result.all_results if result.game is self]
 
     def players(self):
-        pass
+        '''Returns a unique list of all players that played a particular game. Players must be of type Player'''
+        #return list(set([r.player for r in self.results() if r.game is self]))
+        return list({result.player for result in self.results()})
 
     def average_score(self, player):
-        pass
+        '''Returns the average of all the player's scores for a particular game instance'''
+        d = [r.score for r in self.results() if r.player is player]
+        if len(d) == 0:
+            return 0
+        else:
+            avg_score = sum(d)/len(d)
+            return avg_score
 
 class Player:
 
@@ -47,16 +57,28 @@ class Player:
         #     raise Exception("Title property must be of istance string, and more than 0 characters ")
 
     def results(self):
-        pass
+        '''Returns a list of all results for that player. must be of type Result'''
+        return [r for r in Result.all_results if r.player is self]
 
     def games_played(self):
-        pass
+        '''Returns a unique list of all games played by a particular player. Games must be of type Game'''
+        #return [r.game for r in Result.all_results if r.player is self]
+        return list({r.game for r in self.results()})
 
     def played_game(self, game):
-        pass
+        '''Returns True if the player has played the game object provided'''
+        x = game in self.games_played()
+        return x
 
     def num_times_played(self, game):
-        pass
+        '''Returns the number of times the player has played the game instance provided'''
+        #x = [r.game for r in self.results() if r.game is self ]
+        # if x != []:
+        #     return len(x)
+        # else:
+        #     return 0
+        games_played = [result.game for result in self.results()]
+        return games_played.count(game)
 
 class Result:
     all_results = []
@@ -79,11 +101,22 @@ class Result:
 
     @property
     def player(self):
-        return self.all_players
+        return self._player
 
     @player.setter
     def player(self,player):
         if isinstance(player, Player):
             self._player = player
         # else:
-        #   raise Exception("asf")
+        #   raise Exception("not instance of Player")
+
+    @property
+    def game(self):
+        return self._game 
+    
+    @game.setter
+    def game(self,game):
+        if isinstance(game, Game):
+            self._game = game
+        # else:
+        #   raise Exceptions("not instance of Game")
